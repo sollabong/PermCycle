@@ -16,25 +16,28 @@ import '@fontsource/lekton/400.css';
 import { calculateSimplifiedPermutation } from '../api';
 
 const darkTheme = createTheme({
-  palette: { mode: 'dark' },
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#121212',
+    },
+    secondary: {
+      main: '#03DAC5',
+    },
+  },
   typography: {
     fontFamily: 'Roboto, Arial, sans-serif',
   },
 });
 
 const App = () => {
-  const [cycleCount, setCycleCount] = useState(0);
-  const [cycles, setCycles] = useState<string[]>([]);
+  const [cycleCount, setCycleCount] = useState(2);
+  const [cycles, setCycles] = useState<string[]>(['', '']);
   const [arrayToRenderCycles, setArrayToRenderCycles] = useState<string[]>([]);
   const [result, setResult] = useState<string>('');
   const [stepVisualization, setStepVisualization] = useState<string[]>([]);
 
-  const handleCyclesCounterChange = (e: CustomEvent) => {
-    // const numberOfCycles = e.value;
-    // setCycleCount(numberOfCycles)
-  };
-
-  const handleCycleCounter = (target: number) => {
+  const handleCyclesCounterChange = (target: number) => {
     const count = Math.max(1, Math.min(9, target || 1));
     setCycles((prev) => Array.from({ length: count }, (_, i) => prev[i] || ''));
     setCycleCount(count);
@@ -50,10 +53,10 @@ const App = () => {
   };
 
   const calculate = async () => {
-    console.log("klikk")
+    console.log('klikk');
     try {
       const data = await calculateSimplifiedPermutation(cycles);
-      console.log("data ", data);
+      console.log('data ', data);
       if (data['minimizedExpression'] === '') {
         setResult('Nincs megoldás');
       }
@@ -71,7 +74,6 @@ const App = () => {
         <Card
           sx={{
             minWidth: '600px',
-            backgroundColor: 'grey',
             padding: '32px',
             margin: '32px',
           }}
@@ -79,6 +81,7 @@ const App = () => {
           <CardContent>
             <Typography
               variant="h3"
+              color="secondary"
               sx={{
                 textAlign: 'center',
                 paddingBottom: '16px',
@@ -99,7 +102,6 @@ const App = () => {
           <Card
             elevation={4}
             sx={{
-              backgroundColor: 'darkgrey',
               padding: '16px',
               margin: '16px',
             }}
@@ -110,50 +112,51 @@ const App = () => {
               </Typography>
               <TextField
                 id="outlined-basic"
-                label="Ciklusok száma (1-től 9-ig)"
+                label="Ciklusok száma (2-től 9-ig)"
                 variant="outlined"
+                color="secondary"
                 fullWidth
                 sx={{
                   margin: '16px 0px 0px 0px',
                 }}
-                onChange={(e) => handleCycleCounter(Number(e.target.value))}
+                onChange={(e) =>
+                  handleCyclesCounterChange(Number(e.target.value))
+                }
               />
             </CardContent>
           </Card>
           <Card
             elevation={4}
             sx={{
-              backgroundColor: 'darkgrey',
               padding: '16px',
               margin: '16px',
             }}
           >
-            {cycles.length > 0 && (
-              <CardContent>
-                <Typography
-                  variant="subtitle1"
+            <CardContent>
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  paddingBottom: '16px',
+                }}
+              >
+                Add meg a ciklusokat
+              </Typography>
+              {cycles.map((_, index) => (
+                <TextField
+                  id="outlined-basic"
+                  label={`Ciklus ${index + 1}, pl 12345`}
+                  variant="outlined"
+                  color="secondary"
+                  fullWidth
+                  onChange={(e) =>
+                    handleCycleChange(Number(index), e.target.value)
+                  }
                   sx={{
-                    paddingBottom: '16px',
+                    margin: '0px 0px 16px 0px',
                   }}
-                >
-                  Add meg a ciklusokat
-                </Typography>
-                {cycles.map((_, index) => (
-                  <TextField
-                    id="outlined-basic"
-                    label={`Ciklus ${index + 1}, pl 12345`}
-                    variant="outlined"
-                    fullWidth
-                    onChange={(e) =>
-                      handleCycleChange(Number(index), e.target.value)
-                    }
-                    sx={{
-                      margin: '0px 0px 16px 0px',
-                    }}
-                  />
-                ))}
-              </CardContent>
-            )}
+                />
+              ))}
+            </CardContent>
           </Card>
           <Box
             sx={{
@@ -166,6 +169,7 @@ const App = () => {
             <Button
               variant="contained"
               size="large"
+              color="secondary"
               onClick={calculate}
               sx={{
                 width: '100%',
@@ -175,6 +179,35 @@ const App = () => {
               Számolás
             </Button>
           </Box>
+            <Card
+              elevation={4}
+              sx={{
+                padding: '16px',
+                margin: '16px',
+              }}
+            >
+              <CardContent>
+                <Typography
+                  variant="h3"
+                  color="secondary"
+                  sx={{
+                    textAlign: 'center',
+                    paddingBottom: '16px',
+                    fontFamily: 'lekton',
+                  }}
+                >
+                  Eredmény
+                </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    textAlign: 'center',
+                  }}
+                >
+                  {result}
+                </Typography>
+              </CardContent>
+            </Card>
         </Card>
       </Container>
     </ThemeProvider>
