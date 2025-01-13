@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/PermCycle/static/css/main.11daf5f9.css",
+    "main.js": "/PermCycle/static/js/main.a65b2de5.js",
+    "static/js/453.8ab44547.chunk.js": "/PermCycle/static/js/453.8ab44547.chunk.js",
+    "static/media/lekton-latin-400-normal.woff": "/PermCycle/static/media/lekton-latin-400-normal.81fd756091e57c9595d1.woff",
+    "static/media/lekton-latin-400-normal.woff2": "/PermCycle/static/media/lekton-latin-400-normal.e358ad6bd4b2ca6db630.woff2",
+    "static/media/lekton-latin-ext-400-normal.woff": "/PermCycle/static/media/lekton-latin-ext-400-normal.8e3dba68e656fce00480.woff",
+    "static/media/lekton-latin-ext-400-normal.woff2": "/PermCycle/static/media/lekton-latin-ext-400-normal.c4fcb5178a67f5cc00c5.woff2",
+    "index.html": "/PermCycle/index.html",
+    "main.11daf5f9.css.map": "/PermCycle/static/css/main.11daf5f9.css.map",
+    "main.a65b2de5.js.map": "/PermCycle/static/js/main.a65b2de5.js.map",
+    "453.8ab44547.chunk.js.map": "/PermCycle/static/js/453.8ab44547.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.11daf5f9.css",
+    "static/js/main.a65b2de5.js"
+  ]
+}
