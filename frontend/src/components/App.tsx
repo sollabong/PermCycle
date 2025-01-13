@@ -6,7 +6,6 @@ import {
   Box,
   TextField,
   Button,
-  Grid,
   createTheme,
   ThemeProvider,
   Card,
@@ -32,12 +31,34 @@ const darkTheme = createTheme({
 
 const App = () => {
   const [cycleCount, setCycleCount] = useState(2);
-  const [cycles, setCycles] = useState<string[]>(['', '']);
-  const [arrayToRenderCycles, setArrayToRenderCycles] = useState<string[]>([]);
+  const [cycles, setCycles] = useState<string[]>([]);
+  const [errors, setErrors] = useState<string[]>([]);
+  const [countError, setCountError] = useState<string>('');
   const [result, setResult] = useState<string>('');
-  const [stepVisualization, setStepVisualization] = useState<string[]>([]);
 
-  const handleCyclesCounterChange = (target: number) => {
+  const validateCycleCount = (value: string) => {
+    const count = Number(value);
+    if (isNaN(count) || count < 1 || count > 9) {
+      setCountError('Ciklusok száma egy szám kell, hogy legyen 1 és 9 között.');
+      return false;
+    }
+    setCountError('');
+    return true;
+  };
+
+  const validateCycles = (newCycles: string[]) => {
+    const newErrors = newCycles.map((cycle) => {
+      if (cycle === '') return '';
+      if (!/^\d+$/.test(cycle)) return 'Csak számok megengedettek.';
+      return '';
+    });
+    setErrors(newErrors);
+    return newErrors.every((err) => err === '');
+  };
+
+  const handleCyclesCounterChange = (value: string) => {
+    const target = Number(value);
+    if (!validateCycleCount(value)) return;
     const count = Math.max(1, Math.min(9, target || 1));
     setCycles((prev) => Array.from({ length: count }, (_, i) => prev[i] || ''));
     setCycleCount(count);
@@ -49,19 +70,38 @@ const App = () => {
       newCycles[index] = value;
       return newCycles;
     });
+    validateCycles(
+      cycles.map((cycle, i) => (i === index ? value : cycle))
+    );
     console.log('cycles ', cycles);
   };
 
+  const renderCycleInputs = () => {
+    const inputs = [];
+    for (let i = 0; i < cycleCount; i++) {
+      inputs.push(
+        <TextField
+          key={i}
+          label={`Ciklus ${i + 1}, pl 12345`}
+          variant="outlined"
+          color="secondary"
+          fullWidth
+          value={cycles[i] || ''}
+          onChange={(e) => handleCycleChange(i, e.target.value)}
+          sx={{ marginTop: 2 }}
+          error={!!errors[i]}
+          helperText={errors[i]}
+        />
+      );
+    }
+    return inputs;
+  };
+
   const calculate = async () => {
-    console.log('klikk');
+    if (errors.some((err) => err) || countError) return;
     try {
       const data = await calculateSimplifiedPermutation(cycles);
-      console.log('data ', data);
-      if (data['minimizedExpression'] === '') {
-        setResult('Nincs megoldás');
-      }
-      setResult(data.result || 'Hiba történt');
-      setStepVisualization(data.steps || []);
+      setResult(data.result || 'Nincs megoldás');
     } catch (error) {
       setResult('Hiba történt a szerverrel való kommunikáció során.');
     }
@@ -119,8 +159,10 @@ const App = () => {
                 sx={{
                   margin: '16px 0px 0px 0px',
                 }}
+                error={!!countError}
+                helperText={countError}
                 onChange={(e) =>
-                  handleCyclesCounterChange(Number(e.target.value))
+                  handleCyclesCounterChange(e.target.value)
                 }
               />
             </CardContent>
@@ -141,21 +183,7 @@ const App = () => {
               >
                 Add meg a ciklusokat
               </Typography>
-              {cycles.map((_, index) => (
-                <TextField
-                  id="outlined-basic"
-                  label={`Ciklus ${index + 1}, pl 12345`}
-                  variant="outlined"
-                  color="secondary"
-                  fullWidth
-                  onChange={(e) =>
-                    handleCycleChange(Number(index), e.target.value)
-                  }
-                  sx={{
-                    margin: '0px 0px 16px 0px',
-                  }}
-                />
-              ))}
+              {renderCycleInputs()}
             </CardContent>
           </Card>
           <Box
@@ -171,6 +199,7 @@ const App = () => {
               size="large"
               color="secondary"
               onClick={calculate}
+              disabled={!!countError || errors.some((err) => err)}
               sx={{
                 width: '100%',
                 margin: '16px',
