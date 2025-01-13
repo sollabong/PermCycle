@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.decomposePermutation = decomposePermutation;
+exports.decomposePermutation = void 0;
 /**
  * Decompose permutation into disjoint cycles.
  * @param {string[]} cycles - Input cycles as strings, e.g., ['5234', '135', '437'].
@@ -75,3 +75,4 @@ function decomposePermutation(cycles) {
     // // Step 3: Combine all cycles into a single string
     // return result.join('');
 }
+exports.decomposePermutation = decomposePermutation;

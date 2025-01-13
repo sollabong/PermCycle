@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000/api/simplify-permutation';
+const API_URL = 'https://permcycle.onrender.com/api/simplify-permutation';
 
 export const calculateSimplifiedPermutation = async (cycles: string[]) => {
   try {
