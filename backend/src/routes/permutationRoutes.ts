@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { decomposePermutation } from '../services/permutationService';
+import { Request, Response } from 'express';
 
 const router = Router();
 
-router.post('/simplify-permutation', (req, res) => {
+router.post('/simplify-permutation', (req: Request, res: Response) => {
   const { cycles } = req.body;
   console.log(cycles);
   try {
